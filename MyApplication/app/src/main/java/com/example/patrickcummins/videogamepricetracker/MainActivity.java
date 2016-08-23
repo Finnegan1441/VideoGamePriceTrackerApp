@@ -13,12 +13,17 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+public class MainActivity extends AppCompatActivity implements IsThereAnyDealApiHelper.OnResponseFinished {
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
-    private String[] drawerList = new String[]{"1", "Add +"};
+    private ArrayList<String> drawerList = new ArrayList<>();
     private Toolbar toolbar;
 
     @Override
@@ -30,10 +35,20 @@ public class MainActivity extends AppCompatActivity {
             setSupportActionBar(toolbar);
         }
 
+        setDrawerList();
+
         setViews();
         setUpNavigationDrawer();
 
 
+    }
+
+    private void setDrawerList() {
+
+
+        IsThereAnyDealApiHelper helper = new IsThereAnyDealApiHelper(MainActivity.this, MainActivity.this);
+        drawerList.add("1");
+        drawerList.add("2");
     }
 
     private void setViews() {
@@ -73,6 +88,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onPlainRecieved(String plain) {
+        Toast.makeText(MainActivity.this, plain, Toast.LENGTH_SHORT).show();
+
+    }
+
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
         public void onItemClick(AdapterView parent, View view, int position, long id) {
@@ -81,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void selectItem(int position) {
-        Toast.makeText(MainActivity.this, drawerList[position] + " Was Clicked", Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this, drawerList.get(position) + " Was Clicked", Toast.LENGTH_SHORT).show();
 
     }
 }
