@@ -3,6 +3,7 @@ package com.example.patrickcummins.videogamepricetracker.Helpers;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.patrickcummins.videogamepricetracker.IsThereAnyDealService;
@@ -39,7 +40,7 @@ public class IGDBHelper {
     }
 
     public interface IGDBOnResponseFinished {
-        public void OnGamesRecieved(List gamesList);
+        public void OnGamesRecieved(List<Game> gamesList);
 
     }
 
@@ -48,21 +49,37 @@ public class IGDBHelper {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkIno = connectivityManager.getActiveNetworkInfo();
         if (networkIno != null && networkIno.isConnected()) {
-            Call<Game> call = dealService.getGamesList("id%2Cname%2Curl%2Csummary%2Crelease_dates%2", "10", "release_dates.date%3Adesc", title);
-            call.enqueue(new Callback<Game>() {
+            Call<List<Game>> call = dealService.getGamesList("id%2Cname%2Curl%2Csummary%2Crelease_dates%2", "10", "release_dates.date%3Adesc", title);
+//            call.enqueue(new Callback<Game>() {
+//                @Override
+//                public void onResponse(Call<Game> call, Response<Game> response) {
+//                    try {
+//
+//                        onResponseFinished.OnGamesRecieved(response.body().getReleaseDates());
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<Game> call, Throwable t) {
+//                    Toast.makeText(context, "SHITS FUCKED YO 2.0", Toast.LENGTH_SHORT).show();
+//                }
+//            });
+            call.enqueue(new Callback<List<Game>>() {
                 @Override
-                public void onResponse(Call<Game> call, Response<Game> response) {
+                public void onResponse(Call<List<Game>> call, Response<List<Game>> response) {
                     try {
-
-                        onResponseFinished.OnGamesRecieved(response.body().getReleaseDates());
+                        Log.e("PROCESSING RESPONSE", "PROCESSING RESPONSE");
+                        onResponseFinished.OnGamesRecieved( );
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<Game> call, Throwable t) {
-                    Toast.makeText(context, "SHITS FUCKED YO 2.0", Toast.LENGTH_SHORT).show();
+                public void onFailure(Call<List<Game>> call, Throwable t) {
+                    Log.e("NO RESPONSE", "NO RESPONSE");
                 }
             });
         }

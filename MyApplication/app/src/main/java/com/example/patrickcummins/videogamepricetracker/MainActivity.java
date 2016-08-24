@@ -20,7 +20,7 @@ import com.example.patrickcummins.videogamepricetracker.Helpers.IsThereAnyDealAp
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements IsThereAnyDealApiHelper.IsThereAnyDealOnResponseFinished, IGDBHelper.IGDBOnResponseFinished {
+public class MainActivity extends AppCompatActivity implements IsThereAnyDealApiHelper.IsThereAnyDealOnResponseFinished{
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -109,10 +109,6 @@ public class MainActivity extends AppCompatActivity implements IsThereAnyDealApi
 
     }
 
-    @Override
-    public void OnGamesRecieved(List gamesList) {
-
-    }
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
