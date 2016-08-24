@@ -1,5 +1,8 @@
 package com.example.patrickcummins.videogamepricetracker;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -38,8 +41,21 @@ public class MainActivity extends AppCompatActivity implements IsThereAnyDealApi
 
         setViews();
         setUpNavigationDrawer();
+        setUpFragment();
 
 
+    }
+
+    private void setUpFragment() {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+// create a new fragment
+        SearchFragment fragment = new SearchFragment();
+
+// add fragment to the container ( there is nothing there yet, that is why we add )
+        fragmentTransaction.add(R.id.content_frame, fragment);
+        fragmentTransaction.commit();
     }
 
     private void setDrawerList() {
