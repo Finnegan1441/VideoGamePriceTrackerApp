@@ -3,6 +3,7 @@ package com.example.patrickcummins.videogamepricetracker;
 /**
  * Created by patrickcummins on 8/23/16.
  */
+import com.example.patrickcummins.videogamepricetracker.Models.IGDBModels.Game;
 import com.example.patrickcummins.videogamepricetracker.Models.IsThereAnyDealModels.IsThereAnyDealTitleQuery;
 
 import retrofit2.Call;
@@ -14,6 +15,10 @@ public interface IsThereAnyDealService {
 
     @GET("v02/game/plain/?")
     Call<IsThereAnyDealTitleQuery> getPlain(@Query("key") String key, @Query("title") String title);
+
+    @GET("games/?")
+    Call<Game> getGamesList(@Query("fields") String fields, @Query("limit") String limit, @Query("order") String order, @Query("search") String search);
+
 
 
 }

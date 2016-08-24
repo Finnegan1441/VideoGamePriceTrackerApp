@@ -1,4 +1,4 @@
-package com.example.patrickcummins.videogamepricetracker;
+package com.example.patrickcummins.videogamepricetracker.Helpers;
 
 import android.content.Context;
 import android.database.Cursor;

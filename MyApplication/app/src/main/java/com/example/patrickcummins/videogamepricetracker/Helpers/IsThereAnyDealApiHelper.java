@@ -1,4 +1,4 @@
-package com.example.patrickcummins.videogamepricetracker;
+package com.example.patrickcummins.videogamepricetracker.Helpers;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import com.example.patrickcummins.videogamepricetracker.IsThereAnyDealService;
 import com.example.patrickcummins.videogamepricetracker.Models.IsThereAnyDealModels.IsThereAnyDealTitleQuery;
 
 /**
@@ -20,22 +21,22 @@ import com.example.patrickcummins.videogamepricetracker.Models.IsThereAnyDealMod
  */
 
 public class IsThereAnyDealApiHelper {
-    private static final String APIKEY = "";
+    private static final String APIKEY = "7432500e4f76e9326cb6ceaf160a9c25e8802ea9";
     static final String BASE_URL = "https://api.isthereanydeal.com/";
 
     private static Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
     private static IsThereAnyDealService dealService = retrofit.create(IsThereAnyDealService.class);
     private static Context context;
-    private static OnResponseFinished onResponseFinished;
+    private static IsThereAnyDealOnResponseFinished onResponseFinished;
 
-    public IsThereAnyDealApiHelper(Context context, OnResponseFinished onResponseFinished) {
+    public IsThereAnyDealApiHelper(Context context, IsThereAnyDealOnResponseFinished onResponseFinished) {
         this.context = context;
         this.onResponseFinished = onResponseFinished;
 
 
     }
 
-    public interface OnResponseFinished{
+    public interface IsThereAnyDealOnResponseFinished{
         public void onPlainRecieved(String plain);
     }
 
