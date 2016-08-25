@@ -62,7 +62,6 @@ public class IsThereAnyDealApiHelper {
 
                 @Override
                 public void onFailure(Call<IsThereAnyDealTitleQuery> call, Throwable t) {
-                    Toast.makeText(context, "SHITS FUCKED YO", Toast.LENGTH_SHORT).show();
 
                 }
             });

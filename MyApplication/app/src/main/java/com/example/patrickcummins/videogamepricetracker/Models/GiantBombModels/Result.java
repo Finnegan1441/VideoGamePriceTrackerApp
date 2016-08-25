@@ -45,7 +45,7 @@ public class Result {
     private Integer id;
     @SerializedName("image")
     @Expose
-    private Object image;
+    private GiantBombImage image;
     @SerializedName("name")
     @Expose
     private String name;
@@ -225,14 +225,14 @@ public class Result {
     /**
      * @return The image
      */
-    public Object getImage() {
+    public GiantBombImage getImage() {
         return image;
     }
 
     /**
      * @param image The image
      */
-    public void setImage(Object image) {
+    public void setImage(GiantBombImage image) {
         this.image = image;
     }
 

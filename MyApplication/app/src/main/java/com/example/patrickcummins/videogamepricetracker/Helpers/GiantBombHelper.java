@@ -50,7 +50,7 @@ public class GiantBombHelper {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkIno = connectivityManager.getActiveNetworkInfo();
         if (networkIno != null && networkIno.isConnected()) {
-            Call<GameSearchResult> call = apiService.getGamesList(APIKEY,FORMAT, "10", "game", "terraria");
+            Call<GameSearchResult> call = apiService.getGamesList(APIKEY,FORMAT, "10", "game", title);
 //            call.enqueue(new Callback<Game>() {
 //                @Override
 //                public void onResponse(Call<Game> call, Response<Game> response) {
@@ -71,7 +71,6 @@ public class GiantBombHelper {
                 @Override
                 public void onResponse(Call<GameSearchResult> call, Response<GameSearchResult> response) {
                     try {
-                        Log.e("PROCESSING RESPONSE", "PROCESSING RESPONSE");
                         GameSearchResult gameSearchResult = response.body();
                        onResponsesFinished.OnGamesRecieved(gameSearchResult);
 
@@ -82,7 +81,6 @@ public class GiantBombHelper {
 
                 @Override
                 public void onFailure(Call<GameSearchResult> call, Throwable t) {
-                    Log.e("NO RESPONSE", "NO RESPONSE");
                 }
             });
         }

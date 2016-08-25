@@ -3,6 +3,8 @@ package com.example.patrickcummins.videogamepricetracker;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -11,9 +13,11 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.patrickcummins.videogamepricetracker.Helpers.GiantBombHelper;
 import com.example.patrickcummins.videogamepricetracker.Models.GiantBombModels.GameSearchResult;
+import com.example.patrickcummins.videogamepricetracker.Models.GiantBombModels.Result;
 import com.example.patrickcummins.videogamepricetracker.Models.IGDBModels.Game;
 
 import java.util.List;
@@ -21,7 +25,13 @@ import java.util.List;
 /**
  * Created by patrickcummins on 8/24/16.
  */
-public class SearchFragment extends android.support.v4.app.Fragment implements GiantBombHelper.GiantBombOnResponseFinished{
+public class SearchFragment extends android.support.v4.app.Fragment implements GiantBombHelper.GiantBombOnResponseFinished, GameSearchRecyclerAdapter.OnGameSearchRecyclerClickListener{
+    private EditText editText;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter rvAdapter;
+    private RecyclerView.LayoutManager rvLayoutManager;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +41,10 @@ public class SearchFragment extends android.support.v4.app.Fragment implements G
     @Override
     public void onStart() {
         super.onStart();
-        EditText editText = (EditText) getView().findViewById(R.id.game_search_edit_text);
+        editText = (EditText) getView().findViewById(R.id.game_search_edit_text);
+        recyclerView = (RecyclerView) getView().findViewById(R.id.games_list);
+        rvLayoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(rvLayoutManager);
         final GiantBombHelper giantBombHelper = new GiantBombHelper(getContext(), SearchFragment.this);
 
         editText.addTextChangedListener(new TextWatcher() {
@@ -52,18 +65,23 @@ public class SearchFragment extends android.support.v4.app.Fragment implements G
         });
     }
 
-    public void setGamesList(List<Game> gamesList){
-        ListView gamesListView = (ListView) getView().findViewById(R.id.games_list);
 
-        TextView gameTextView = (TextView) getView().findViewById(R.id.game_tv);
-
-        gameTextView.setText(gamesList.get(0).getName());
-    }
 
     @Override
     public void OnGamesRecieved(GameSearchResult gameSearchResult) {
         TextView gameTextView = (TextView) getView().findViewById(R.id.game_tv);
 
+
+
         gameTextView.setText(gameSearchResult.getResults().get(0).getName());
+        rvAdapter = new GameSearchRecyclerAdapter(gameSearchResult.getResults(), this);
+
+        recyclerView.setAdapter(rvAdapter);
+
+    }
+
+    @Override
+    public void onItemClick(Result currentResult) {
+        Toast.makeText(getContext(), currentResult.getName() + " was Clicked", Toast.LENGTH_SHORT).show();
     }
 }
