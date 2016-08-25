@@ -4,13 +4,11 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.patrickcummins.videogamepricetracker.IsThereAnyDealService;
+import com.example.patrickcummins.videogamepricetracker.APIService;
+import com.example.patrickcummins.videogamepricetracker.Models.GiantBombModels.GameSearchResult;
 import com.example.patrickcummins.videogamepricetracker.Models.IGDBModels.Game;
-import com.example.patrickcummins.videogamepricetracker.Models.IsThereAnyDealModels.IsThereAnyDealTitleQuery;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -22,25 +20,28 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by patrickcummins on 8/23/16.
  */
-public class IGDBHelper {
-    private static final String APIKEY = "3P7A7rIC6Hmsha9qRsKRQhtfFyzdp1jzLDFjsnKqCuqCJMkQhF";
-    static final String BASE_URL = "https://api.isthereanydeal.com/";
-    static final String BASE_URL2 = "https://igdbcom-internet-game-database-v1.p.mashape.com/";
+public class GiantBombHelper {
+
+    private static final String APIKEY = "";
+    private static final String BASE_URL = "http://www.giantbomb.com/api/";
+    private static final String FORMAT = "json";
+
 
     private static Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-    private static IsThereAnyDealService dealService = retrofit.create(IsThereAnyDealService.class);
+    private static APIService apiService = retrofit.create(APIService.class);
     private static Context context;
-    private static IGDBOnResponseFinished onResponseFinished;
+    private static GiantBombOnResponseFinished onResponsesFinished;
 
 
-    public IGDBHelper(Context context) {
+    public GiantBombHelper(Context context, GiantBombOnResponseFinished onResponseFinished) {
         this.context = context;
+        this.onResponsesFinished = onResponseFinished;
 
 
     }
 
-    public interface IGDBOnResponseFinished {
-        public void OnGamesRecieved(List<Game> gamesList);
+    public interface GiantBombOnResponseFinished {
+        public void OnGamesRecieved(GameSearchResult gameSearchResult);
 
     }
 
@@ -49,7 +50,7 @@ public class IGDBHelper {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkIno = connectivityManager.getActiveNetworkInfo();
         if (networkIno != null && networkIno.isConnected()) {
-            Call<List<Game>> call = dealService.getGamesList("id%2Cname%2Curl%2Csummary%2Crelease_dates%2", "10", "release_dates.date%3Adesc", title);
+            Call<GameSearchResult> call = apiService.getGamesList(APIKEY,FORMAT, "10", "game", "terraria");
 //            call.enqueue(new Callback<Game>() {
 //                @Override
 //                public void onResponse(Call<Game> call, Response<Game> response) {
@@ -66,19 +67,21 @@ public class IGDBHelper {
 //                    Toast.makeText(context, "SHITS FUCKED YO 2.0", Toast.LENGTH_SHORT).show();
 //                }
 //            });
-            call.enqueue(new Callback<List<Game>>() {
+            call.enqueue(new Callback<GameSearchResult>() {
                 @Override
-                public void onResponse(Call<List<Game>> call, Response<List<Game>> response) {
+                public void onResponse(Call<GameSearchResult> call, Response<GameSearchResult> response) {
                     try {
                         Log.e("PROCESSING RESPONSE", "PROCESSING RESPONSE");
-                        onResponseFinished.OnGamesRecieved( );
+                        GameSearchResult gameSearchResult = response.body();
+                       onResponsesFinished.OnGamesRecieved(gameSearchResult);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<List<Game>> call, Throwable t) {
+                public void onFailure(Call<GameSearchResult> call, Throwable t) {
                     Log.e("NO RESPONSE", "NO RESPONSE");
                 }
             });

@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
-import com.example.patrickcummins.videogamepricetracker.IsThereAnyDealService;
+import com.example.patrickcummins.videogamepricetracker.APIService;
 import com.example.patrickcummins.videogamepricetracker.Models.IsThereAnyDealModels.IsThereAnyDealTitleQuery;
 
 /**
@@ -21,11 +21,11 @@ import com.example.patrickcummins.videogamepricetracker.Models.IsThereAnyDealMod
  */
 
 public class IsThereAnyDealApiHelper {
-    private static final String APIKEY = "7432500e4f76e9326cb6ceaf160a9c25e8802ea9";
+    private static final String APIKEY = "";
     static final String BASE_URL = "https://api.isthereanydeal.com/";
 
     private static Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
-    private static IsThereAnyDealService dealService = retrofit.create(IsThereAnyDealService.class);
+    private static APIService dealService = retrofit.create(APIService.class);
     private static Context context;
     private static IsThereAnyDealOnResponseFinished onResponseFinished;
 

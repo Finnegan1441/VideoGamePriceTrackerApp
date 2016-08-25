@@ -1,6 +1,5 @@
 package com.example.patrickcummins.videogamepricetracker;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -14,11 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.patrickcummins.videogamepricetracker.Helpers.IGDBHelper;
 import com.example.patrickcummins.videogamepricetracker.Helpers.IsThereAnyDealApiHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements IsThereAnyDealApiHelper.IsThereAnyDealOnResponseFinished{
     private DrawerLayout mDrawerLayout;
@@ -50,10 +47,9 @@ public class MainActivity extends AppCompatActivity implements IsThereAnyDealApi
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-// create a new fragment
         SearchFragment fragment = new SearchFragment();
 
-// add fragment to the container ( there is nothing there yet, that is why we add )
+
         fragmentTransaction.add(R.id.content_frame, fragment);
         fragmentTransaction.commit();
     }
