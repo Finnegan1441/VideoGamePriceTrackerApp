@@ -3,10 +3,12 @@ package com.example.patrickcummins.videogamepricetracker.Models.GiantBombModels;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by patrickcummins on 8/25/16.
  */
-public class GiantBombImage {
+public class GiantBombImage implements Serializable{
 
     @SerializedName("icon_url")
     @Expose

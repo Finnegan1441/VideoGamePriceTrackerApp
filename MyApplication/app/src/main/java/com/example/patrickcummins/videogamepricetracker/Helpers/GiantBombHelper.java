@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.patrickcummins.videogamepricetracker.APIService;
 import com.example.patrickcummins.videogamepricetracker.Models.GiantBombModels.GameSearchResult;
+import com.example.patrickcummins.videogamepricetracker.Models.GiantBombModels.Result;
 import com.example.patrickcummins.videogamepricetracker.Models.IGDBModels.Game;
 
 import java.util.List;
@@ -31,42 +32,47 @@ public class GiantBombHelper {
     private static APIService apiService = retrofit.create(APIService.class);
     private static Context context;
     private static GiantBombOnResponseFinished onResponsesFinished;
+    private static ConnectivityManager connectivityManager;
+    private static NetworkInfo networkIno;
 
 
     public GiantBombHelper(Context context, GiantBombOnResponseFinished onResponseFinished) {
         this.context = context;
         this.onResponsesFinished = onResponseFinished;
-
-
+        connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        networkIno = connectivityManager.getActiveNetworkInfo();
     }
 
     public interface GiantBombOnResponseFinished {
-        public void OnGamesRecieved(GameSearchResult gameSearchResult);
+        void OnGamesRecieved(GameSearchResult gameSearchResult);
+        void OnSpecificGameRecieved(Result result);
+
+    }
+    public static void getGame(int id){
+        if (networkIno != null && networkIno.isConnected()) {
+            Call<GameSearchResult> call = apiService.getGame(APIKEY,FORMAT, "1","id:"+id);
+            call.enqueue(new Callback<GameSearchResult>() {
+                @Override
+                public void onResponse(Call<GameSearchResult> call, Response<GameSearchResult> response) {
+                    GameSearchResult gameSearchResult = response.body();
+                    onResponsesFinished.OnSpecificGameRecieved(gameSearchResult.getResults().get(0));
+                }
+
+                @Override
+                public void onFailure(Call<GameSearchResult> call, Throwable t) {
+
+                }
+            });
+
+        }
+
 
     }
 
-    public static void getGame(String title) {
+    public static void searchForGame(String title) {
 
-        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkIno = connectivityManager.getActiveNetworkInfo();
         if (networkIno != null && networkIno.isConnected()) {
             Call<GameSearchResult> call = apiService.getGamesList(APIKEY,FORMAT, "10", "game", title);
-//            call.enqueue(new Callback<Game>() {
-//                @Override
-//                public void onResponse(Call<Game> call, Response<Game> response) {
-//                    try {
-//
-//                        onResponseFinished.OnGamesRecieved(response.body().getReleaseDates());
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<Game> call, Throwable t) {
-//                    Toast.makeText(context, "SHITS FUCKED YO 2.0", Toast.LENGTH_SHORT).show();
-//                }
-//            });
             call.enqueue(new Callback<GameSearchResult>() {
                 @Override
                 public void onResponse(Call<GameSearchResult> call, Response<GameSearchResult> response) {

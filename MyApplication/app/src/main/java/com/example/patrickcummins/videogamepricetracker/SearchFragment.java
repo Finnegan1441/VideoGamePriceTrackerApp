@@ -1,6 +1,7 @@
 package com.example.patrickcummins.videogamepricetracker;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,11 +26,13 @@ import java.util.List;
 /**
  * Created by patrickcummins on 8/24/16.
  */
-public class SearchFragment extends android.support.v4.app.Fragment implements GiantBombHelper.GiantBombOnResponseFinished, GameSearchRecyclerAdapter.OnGameSearchRecyclerClickListener{
+public class SearchFragment extends android.support.v4.app.Fragment implements GiantBombHelper.GiantBombOnResponseFinished, GameSearchRecyclerAdapter.OnGameSearchRecyclerClickListener {
     private EditText editText;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter rvAdapter;
     private RecyclerView.LayoutManager rvLayoutManager;
+    public static final String CurrentResultExtra = "CurrentResultExtra";
+
 
 
     @Nullable
@@ -55,7 +58,7 @@ public class SearchFragment extends android.support.v4.app.Fragment implements G
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                giantBombHelper.getGame(charSequence.toString());
+                giantBombHelper.searchForGame(charSequence.toString());
             }
 
             @Override
@@ -66,11 +69,9 @@ public class SearchFragment extends android.support.v4.app.Fragment implements G
     }
 
 
-
     @Override
     public void OnGamesRecieved(GameSearchResult gameSearchResult) {
         TextView gameTextView = (TextView) getView().findViewById(R.id.game_tv);
-
 
 
         gameTextView.setText(gameSearchResult.getResults().get(0).getName());
@@ -81,7 +82,15 @@ public class SearchFragment extends android.support.v4.app.Fragment implements G
     }
 
     @Override
+    public void OnSpecificGameRecieved(Result result) {
+
+    }
+
+    @Override
     public void onItemClick(Result currentResult) {
-        Toast.makeText(getContext(), currentResult.getName() + " was Clicked", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getContext(), GameViewActivity.class);
+        intent.putExtra(GameViewActivity.RESOLVE_INTENT, GameViewActivity.SEARCH_INTENT);
+        intent.putExtra(CurrentResultExtra, currentResult);
+        startActivity(intent);
     }
 }

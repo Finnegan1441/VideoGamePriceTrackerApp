@@ -23,6 +23,10 @@ public interface APIService {
     Call<IsThereAnyDealTitleQuery> getPlain(@Query("key") String key,
                                             @Query("title") String title);
 
+    @GET("v01/game/prices/?")
+    Call<IsThereAnyDealTitleQuery> getPrices(@Query("key") String key,
+                                             @Query("plains") String plains);
+
 
     @GET("search/?")
     Call<GameSearchResult> getGamesList(@Query("api_key") String api_key,
@@ -30,6 +34,12 @@ public interface APIService {
                                         @Query("limit") String limit,
                                         @Query("resource_type") String resource_type,
                                         @Query("query") String query);
+
+    @GET("games/?")
+    Call<GameSearchResult> getGame(@Query("api_key") String api_key,
+                                   @Query("format") String format,
+                                   @Query("limit") String limit,
+                                   @Query("filter") String id);
 
 
 }

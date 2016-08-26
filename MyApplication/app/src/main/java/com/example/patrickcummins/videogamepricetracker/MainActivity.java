@@ -1,5 +1,6 @@
 package com.example.patrickcummins.videogamepricetracker;
 
+import android.content.Intent;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
@@ -13,17 +14,25 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.patrickcummins.videogamepricetracker.Helpers.DatabaseHelper;
+import com.example.patrickcummins.videogamepricetracker.Helpers.GiantBombHelper;
 import com.example.patrickcummins.videogamepricetracker.Helpers.IsThereAnyDealApiHelper;
+import com.example.patrickcummins.videogamepricetracker.Models.GiantBombModels.GameSearchResult;
+import com.example.patrickcummins.videogamepricetracker.Models.GiantBombModels.Result;
+import com.example.patrickcummins.videogamepricetracker.Models.IGDBModels.GamesList;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements IsThereAnyDealApiHelper.IsThereAnyDealOnResponseFinished{
+public class MainActivity extends AppCompatActivity implements IsThereAnyDealApiHelper.IsThereAnyDealOnResponseFinished, GiantBombHelper.GiantBombOnResponseFinished{
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
     private String mActivityTitle;
     private ArrayList<String> drawerList = new ArrayList<>();
     private Toolbar toolbar;
+    private DatabaseHelper databaseHelper;
+    private GiantBombHelper giantBombHelper;
+    private final String GAME_ID_EXTRA = "gameID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +42,8 @@ public class MainActivity extends AppCompatActivity implements IsThereAnyDealApi
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+        databaseHelper = DatabaseHelper.getInstance(MainActivity.this);
+        giantBombHelper= new GiantBombHelper(MainActivity.this, this);
 
         setDrawerList();
 
@@ -57,9 +68,10 @@ public class MainActivity extends AppCompatActivity implements IsThereAnyDealApi
     private void setDrawerList() {
 
 
-        IsThereAnyDealApiHelper helper = new IsThereAnyDealApiHelper(MainActivity.this, MainActivity.this);
-        drawerList.add("1");
-        drawerList.add("2");
+        ArrayList<String> gameList = databaseHelper.getAllSavedGames();
+        for (int i = 0; i < gameList.size(); i++) {
+            drawerList.add(gameList.get(i));
+        }
     }
 
     private void setViews() {
@@ -105,6 +117,26 @@ public class MainActivity extends AppCompatActivity implements IsThereAnyDealApi
 
     }
 
+    @Override
+    public void onGameRecieved() {
+
+    }
+
+    @Override
+    public void OnGamesRecieved(GameSearchResult gameSearchResult) {
+
+    }
+
+    @Override
+    public void OnSpecificGameRecieved(Result result) {
+
+
+        Intent intent = new Intent(MainActivity.this, GameViewActivity.class);
+        intent.putExtra(SearchFragment.CurrentResultExtra, result);
+        startActivity(intent);
+
+    }
+
 
     private class DrawerItemClickListener implements ListView.OnItemClickListener {
         @Override
@@ -114,7 +146,11 @@ public class MainActivity extends AppCompatActivity implements IsThereAnyDealApi
     }
 
     private void selectItem(int position) {
-        Toast.makeText(MainActivity.this, drawerList.get(position) + " Was Clicked", Toast.LENGTH_SHORT).show();
+        int id = databaseHelper.getGameId(position);
+        Intent intent =  new Intent(MainActivity.this, GameViewActivity.class);
+        intent.putExtra(GameViewActivity.RESOLVE_INTENT, GameViewActivity.MAIN_INTENT);
+        intent.putExtra(GameViewActivity.GAME_ID, id);
+        startActivity(intent);
 
     }
 }

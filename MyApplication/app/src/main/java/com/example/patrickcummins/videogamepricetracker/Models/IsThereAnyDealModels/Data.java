@@ -6,8 +6,10 @@ package com.example.patrickcummins.videogamepricetracker.Models.IsThereAnyDealMo
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.HashMap;
 
-public class Data {
+
+public class Data extends HashMap {
 
     @SerializedName("plain")
     @Expose
